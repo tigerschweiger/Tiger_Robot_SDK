@@ -1,3 +1,4 @@
+#include<config.hpp>
 
 
 int main() {
@@ -10,7 +11,11 @@ int main() {
 
   // choose the proxy navigation solution:
   Robot2 robot(1, std::make_unique<SafetyNavigationProxy>());
-
+  Logger::Instance().Info("Robot started");
+  ConfigManager::Instance().Load("robot.yaml");
+  auto speed =
+      ConfigManager::Instance().Get<double>("robot.max_speed") std::cout
+      << "The max speed of this robot is: " << speed << std::endl;
 
   robot.navigate();
 }
