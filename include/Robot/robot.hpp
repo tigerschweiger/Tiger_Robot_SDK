@@ -1,5 +1,6 @@
 
 #include <mission.hpp>
+#include <unique_ptr>
 
 enum class RobotStatus : uint8_t {
   Unknown = 0,
@@ -40,7 +41,8 @@ struct Pose() {
 };
 
 class Robot {
-  Robot(RobotStatus status) : status_(status) {}
+  Robot(RobotStatus status, std::unique<iNavigator> navigator)
+      : status_(status), navigator_(std::move(navigator)) {}
   void connect();
   void disconnect();
   void start();
@@ -51,10 +53,22 @@ class Robot {
   void setPose(double time);
   void resetLocalization();
 
+  void navigate();
+
 private:
   RobotStatus status_;
   double longtitude_;
   double latitude_;
 
   Mission mission_;
+
+  std::unique_ptr<iNavigator> navigator_;
 };
+
+// class LidarRobot : public Robot{
+//   LidarRobot(RobotStatus status) : status_(status) {}
+// };
+
+// class CameraRobot : public Robot{
+//   CameraRobot(RobotStatus status) : status_(status) {}
+// };
