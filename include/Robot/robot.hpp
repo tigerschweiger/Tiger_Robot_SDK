@@ -41,7 +41,7 @@ struct Pose() {
 };
 
 class Robot {
-  Robot(RobotStatus status, std::unique<iNavigator> navigator)
+  Robot(RobotStatus status, std::unique<INavigator> navigator)
       : status_(status), navigator_(std::move(navigator)) {}
   void connect();
   void disconnect();
@@ -53,8 +53,12 @@ class Robot {
   void setPose(double time);
   void resetLocalization();
 
-  void navigate();
+  void navigate(){
+    navigator_->navigate();
+  }
 
+  // RobotMemento SaveState();
+  // void Restore(const RobotMemento& memento);
 private:
   RobotStatus status_;
   double longtitude_;
@@ -62,7 +66,7 @@ private:
 
   Mission mission_;
 
-  std::unique_ptr<iNavigator> navigator_;
+  std::unique_ptr<INavigator> navigator_;
 };
 
 // class LidarRobot : public Robot{
@@ -72,3 +76,19 @@ private:
 // class CameraRobot : public Robot{
 //   CameraRobot(RobotStatus status) : status_(status) {}
 // };
+
+// class RobotMomento {
+// public:
+//   RobotMomento(Pose &currentPose, RobotStatus &status,
+//                BatteryStatus &batteryStatus)
+//       : currentPose_(currentPose), batteryStatus_(batteryStatus),
+//         status_(status) {}
+
+// private:
+//   friend class Robot; // TODO: why?
+//   Pose currentPose_;
+//   RobotStatus status_;
+//   BatteryStatus batteryStatus_;
+// };
+
+class NavigationProxy
