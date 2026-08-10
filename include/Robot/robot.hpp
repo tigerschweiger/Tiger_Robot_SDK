@@ -53,12 +53,18 @@ class Robot {
   void setPose(double time);
   void resetLocalization();
 
-  void navigate(){
-    navigator_->navigate();
-  }
+  void navigate() { navigator_->navigate(); }
 
   // RobotMemento SaveState();
   // void Restore(const RobotMemento& memento);
+
+  // observer pattern
+  using BatteryCallback =
+      std::function<void(const Battery &)>; // general function container
+  void onBatteryChange(BatteryCallback callback) {
+    battery_callback_ = std::move(callback);
+  }
+
 private:
   RobotStatus status_;
   double longtitude_;
@@ -67,6 +73,8 @@ private:
   Mission mission_;
 
   std::unique_ptr<INavigator> navigator_;
+  BatteryCallback
+      battery_callback_; // TODO: std::vector<BatteryCallback> callbacks_;
 };
 
 // class LidarRobot : public Robot{
@@ -90,5 +98,3 @@ private:
 //   RobotStatus status_;
 //   BatteryStatus batteryStatus_;
 // };
-
-class NavigationProxy

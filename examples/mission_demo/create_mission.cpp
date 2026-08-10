@@ -1,5 +1,4 @@
-#include<config.hpp>
-
+#include <config.hpp>
 
 int main() {
   // choose the algorithm from the config
@@ -18,4 +17,11 @@ int main() {
       << "The max speed of this robot is: " << speed << std::endl;
 
   robot.navigate();
+
+  // Anyone wants the change of battery, call this function
+  // pseudo code:
+  // robot.updateBattery();
+  robot.onBatteryChange([](const Battery &battery) {
+    std::cout << "Battery: " << battery.percentage << std::endl;
+  });
 }
