@@ -1,6 +1,8 @@
 #include <config.hpp>
+#include <hardware.hpp>
 
-int main() {
+int main()
+{
   // choose the algorithm from the config
   Robot robot(1, std::make_unique<AStarNavigator>());
   // auto robot = RobotFactory::create("lidar");
@@ -21,7 +23,11 @@ int main() {
   // Anyone wants the change of battery, call this function
   // pseudo code:
   // robot.updateBattery();
-  robot.onBatteryChange([](const Battery &battery) {
-    std::cout << "Battery: " << battery.percentage << std::endl;
-  });
+  robot.onBatteryChange([](const Battery &battery)
+                        { std::cout << "Battery: " << battery.percentage << std::endl; });
+
+  auto lidar = createSensor(Lidar);
+  auto camera = createSensor(Camera);
+  std::cout << "Distance using Lidar: " << lidar->getDistance() << std::endl;
+  std::cout << "Distance using Camera: " << camera->getDistance() << std::endl;
 }
