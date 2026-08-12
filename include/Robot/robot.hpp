@@ -2,7 +2,8 @@
 #include <mission.hpp>
 #include <unique_ptr>
 
-enum class RobotStatus : uint8_t {
+enum class RobotStatus : uint8_t
+{
   Unknown = 0,
   Idle = 1,
   Moving = 2,
@@ -14,14 +15,16 @@ enum class RobotStatus : uint8_t {
   Emergencystop = 8
 };
 
-enum class BatteryStatus : uint8_t {
+enum class BatteryStatus : uint8_t
+{
   Unknown = 0,
   Charing = 1,
   Discharging = 2,
   Idle = 3
 };
 
-class Battery {
+class Battery
+{
 public:
   BatteryStatus getBatteryStatus() { return battery_status_; }
 
@@ -30,7 +33,8 @@ private:
   BatteryStatus battery_status_;
 };
 
-struct Pose() {
+struct Pose()
+{
   double x;
   double y;
   double z;
@@ -40,7 +44,8 @@ struct Pose() {
   double yaw;
 };
 
-class Robot {
+class Robot
+{
   Robot(RobotStatus status, std::unique<INavigator> navigator)
       : status_(status), navigator_(std::move(navigator)) {}
   void connect();
@@ -61,8 +66,22 @@ class Robot {
   // observer pattern
   using BatteryCallback =
       std::function<void(const Battery &)>; // general function container
-  void onBatteryChange(BatteryCallback callback) {
+  void onBatteryChange(BatteryCallback callback)
+  {
     battery_callback_ = std::move(callback);
+  }
+
+  // Facade pattern:
+  void startRobot()
+  {
+    locator_->getCurrentPosition();
+    std::cout << "Start the localization node!" << std::endl;
+
+    std::cout << "Start the perception node!" << std::endl;
+
+    std::cout << "Start the control node!" << std::endl;
+
+    std::cout << "Start the planning node!" << std::endl;
   }
 
 private:
@@ -75,6 +94,7 @@ private:
   std::unique_ptr<INavigator> navigator_;
   BatteryCallback
       battery_callback_; // TODO: std::vector<BatteryCallback> callbacks_;
+  std::unique_ptr<ILocalization> locator_;
 };
 
 // class LidarRobot : public Robot{
