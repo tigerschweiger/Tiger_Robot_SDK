@@ -15,6 +15,29 @@ enum class RobotStatus : uint8_t
   Emergencystop = 8
 };
 
+// state patterns:
+class RobotState
+{
+public:
+  virtual void getState() = 0;
+  virtual void charge() = 0;
+
+  virtual ~RobotState() {}
+};
+
+class StandbyState : RobotState
+{
+public:
+  void getState() override;
+};
+
+class MoveState : RobotState
+{
+public:
+  void getState() override;
+};
+
+
 enum class BatteryStatus : uint8_t
 {
   Unknown = 0,
@@ -47,7 +70,7 @@ struct Pose()
 class Robot
 {
   Robot(RobotStatus status, std::unique<INavigator> navigator)
-      : status_(status), navigator_(std::move(navigator)) {}
+      : status_(status), navigator_(std::move(navigator)), robotState_(std::make_unique<StandbyState>()) {}
   void connect();
   void disconnect();
   void start();
@@ -86,6 +109,7 @@ class Robot
 
 private:
   RobotStatus status_;
+  std::unique_ptr<RobotState> robotState_;
   double longtitude_;
   double latitude_;
 
