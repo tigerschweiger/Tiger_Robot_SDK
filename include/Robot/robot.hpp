@@ -2,8 +2,8 @@
 #include <mission.hpp>
 #include <unique_ptr>
 
-enum class RobotStatus : uint8_t
-{
+// TODO: initialize RobotState using RobotStatus
+enum class RobotStatus : uint8_t {
   Unknown = 0,
   Idle = 1,
   Moving = 2,
@@ -16,8 +16,7 @@ enum class RobotStatus : uint8_t
 };
 
 // state patterns:
-class RobotState
-{
+class RobotState {
 public:
   virtual void getState() = 0;
   virtual void charge() = 0;
@@ -25,29 +24,29 @@ public:
   virtual ~RobotState() {}
 };
 
-class StandbyState : RobotState
-{
+class StandbyState : RobotState {
 public:
   void getState() override;
 };
 
-class MoveState : RobotState
-{
+class MoveState : RobotState {
 public:
   void getState() override;
 };
 
+class ChargeState : RobotState {
+public:
+  void getState() override;
+};
 
-enum class BatteryStatus : uint8_t
-{
+enum class BatteryStatus : uint8_t {
   Unknown = 0,
   Charing = 1,
   Discharging = 2,
   Idle = 3
 };
 
-class Battery
-{
+class Battery {
 public:
   BatteryStatus getBatteryStatus() { return battery_status_; }
 
@@ -56,8 +55,7 @@ private:
   BatteryStatus battery_status_;
 };
 
-struct Pose()
-{
+struct Pose() {
   double x;
   double y;
   double z;
@@ -67,10 +65,10 @@ struct Pose()
   double yaw;
 };
 
-class Robot
-{
+class Robot {
   Robot(RobotStatus status, std::unique<INavigator> navigator)
-      : status_(status), navigator_(std::move(navigator)), robotState_(std::make_unique<StandbyState>()) {}
+      : status_(status), navigator_(std::move(navigator)),
+        robotState_(std::make_unique<StandbyState>()) {}
   void connect();
   void disconnect();
   void start();
@@ -89,14 +87,12 @@ class Robot
   // observer pattern
   using BatteryCallback =
       std::function<void(const Battery &)>; // general function container
-  void onBatteryChange(BatteryCallback callback)
-  {
+  void onBatteryChange(BatteryCallback callback) {
     battery_callback_ = std::move(callback);
   }
 
   // Facade pattern:
-  void startRobot()
-  {
+  void startRobot() {
     locator_->getCurrentPosition();
     std::cout << "Start the localization node!" << std::endl;
 
@@ -105,6 +101,12 @@ class Robot
     std::cout << "Start the control node!" << std::endl;
 
     std::cout << "Start the planning node!" << std::endl;
+  }
+
+  // TODO: which function should be in Robot class and which in RobotState class
+  void getState() { return robotState_->getState(); }
+  void setState(RobotState &robot_state) {
+    robotState_ = std::make_unique<RobotState>(robot_state);
   }
 
 private:
