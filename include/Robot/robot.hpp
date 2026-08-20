@@ -1,6 +1,9 @@
 
+#include <functional>
+#include <localization.hpp>
+#include <memory>
 #include <mission.hpp>
-#include <unique_ptr>
+#include <navigation.hpp>
 
 // TODO: initialize RobotState using RobotStatus
 enum class RobotStatus : uint8_t {
@@ -24,9 +27,13 @@ public:
   virtual ~RobotState() {}
 };
 
-class StandbyState : RobotState {
+class StandbyState
+    : public RobotState { // TODO: private/protected inheritance, degrading
 public:
   void getState() override;
+
+  virtual ~StandbyState(); // if it will be inherited, better virtual
+                           // deconstructor to deconstruct the child class
 };
 
 class MoveState : RobotState {
@@ -55,7 +62,7 @@ private:
   BatteryStatus battery_status_;
 };
 
-struct Pose() {
+struct Pose {
   double x;
   double y;
   double z;
@@ -66,9 +73,11 @@ struct Pose() {
 };
 
 class Robot {
-  Robot(RobotStatus status, std::unique<INavigator> navigator)
+  Robot(RobotStatus status, std::unique_ptr<INavigator> navigator)
       : status_(status), navigator_(std::move(navigator)),
-        robotState_(std::make_unique<StandbyState>()) {}
+        robotState_(std::make_unique<StandbyState>()) {
+  } // make_unique can initialize unique_ptr when public inheritance because
+    // needs StandbyState* → RobotState*
   void connect();
   void disconnect();
   void start();
@@ -92,16 +101,7 @@ class Robot {
   }
 
   // Facade pattern:
-  void startRobot() {
-    locator_->getCurrentPosition();
-    std::cout << "Start the localization node!" << std::endl;
-
-    std::cout << "Start the perception node!" << std::endl;
-
-    std::cout << "Start the control node!" << std::endl;
-
-    std::cout << "Start the planning node!" << std::endl;
-  }
+  void startRobot() {}
 
   // TODO: which function should be in Robot class and which in RobotState class
   void getState() { return robotState_->getState(); }
