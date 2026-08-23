@@ -1,8 +1,8 @@
 #include <robot.hpp>
 
-Robot::navigate() { navigator_->plan(); }
+void Robot::navigate() { navigator_->navigate(); }
 
-Robot::startRobot() {
+void Robot::startRobot() {
   locator_->getCurrentLocalization();
   std::cout << "Start the localization node!" << std::endl;
 

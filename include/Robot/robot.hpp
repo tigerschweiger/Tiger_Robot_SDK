@@ -24,7 +24,8 @@ public:
   virtual void getState() = 0;
   virtual void charge() = 0;
 
-  virtual ~RobotState() {}
+  virtual ~RobotState() {} // if it will be inherited, better virtual
+                           // deconstructor to deconstruct the child class
 };
 
 class StandbyState
@@ -32,8 +33,7 @@ class StandbyState
 public:
   void getState() override;
 
-  virtual ~StandbyState(); // if it will be inherited, better virtual
-                           // deconstructor to deconstruct the child class
+  ~StandbyState() override;
 };
 
 class MoveState : RobotState {
@@ -88,7 +88,7 @@ class Robot {
   void setPose(double time);
   void resetLocalization();
 
-  void navigate() { navigator_->navigate(); }
+  void navigate();
 
   // RobotMemento SaveState();
   // void Restore(const RobotMemento& memento);
@@ -101,7 +101,7 @@ class Robot {
   }
 
   // Facade pattern:
-  void startRobot() {}
+  void startRobot();
 
   // TODO: which function should be in Robot class and which in RobotState class
   void getState() { return robotState_->getState(); }
