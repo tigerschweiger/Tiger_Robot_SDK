@@ -1,17 +1,18 @@
 #include <config.hpp>
 #include <hardware.hpp>
+#include <logger.h>
+#include <robot.hpp>
 
-int main()
-{
+int main() {
   // choose the algorithm from the config
-  Robot robot(1, std::make_unique<AStarNavigator>());
+  Robot robot(RobotStatus::Idle, std::make_unique<AStarNavigator>());
   // auto robot = RobotFactory::create("lidar");
 
   std::cout << "Your robot has been created! Please give me some poses!"
             << std::endl;
 
   // choose the proxy navigation solution:
-  Robot2 robot(1, std::make_unique<SafetyNavigationProxy>());
+  Robot robot2(RobotStatus::Idle, std::make_unique<SafetyNavigationProxy>());
   Logger::Instance().Info("Robot started");
   ConfigManager::Instance().Load("robot.yaml");
   auto speed =
@@ -23,8 +24,9 @@ int main()
   // Anyone wants the change of battery, call this function
   // pseudo code:
   // robot.updateBattery();
-  robot.onBatteryChange([](const Battery &battery)
-                        { std::cout << "Battery: " << battery.percentage << std::endl; });
+  robot.onBatteryChange([](const Battery &battery) {
+    std::cout << "Battery: " << battery.percentage << std::endl;
+  });
 
   auto lidar = createSensor(Lidar);
   auto camera = createSensor(Camera);

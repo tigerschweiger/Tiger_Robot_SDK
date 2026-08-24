@@ -22,7 +22,9 @@ enum class RobotStatus : uint8_t {
 class RobotState {
 public:
   virtual void getState() = 0;
-  virtual void charge() = 0;
+  // virtual void charge() = 0;//virtual =0, pure virtual function, if not
+  // overrided in the child class, child class will be an abstraction class
+  virtual void normal_charge();
 
   virtual ~RobotState() {} // if it will be inherited, better virtual
                            // deconstructor to deconstruct the child class
@@ -31,7 +33,8 @@ public:
 class StandbyState
     : public RobotState { // TODO: private/protected inheritance, degrading
 public:
-  void getState() override;
+  void getState() override; // this makes StandbyState an unabstraction class,
+                            // but RobotState still abstraction
 
   ~StandbyState() override;
 };
@@ -73,6 +76,7 @@ struct Pose {
 };
 
 class Robot {
+public:
   Robot(RobotStatus status, std::unique_ptr<INavigator> navigator)
       : status_(status), navigator_(std::move(navigator)),
         robotState_(std::make_unique<StandbyState>()) {
@@ -105,9 +109,11 @@ class Robot {
 
   // TODO: which function should be in Robot class and which in RobotState class
   void getState() { return robotState_->getState(); }
-  void setState(RobotState &robot_state) {
-    robotState_ = std::make_unique<RobotState>(robot_state);
-  }
+  // void setState(RobotState &robot_state) {
+  //   robotState_ = std::make_unique<RobotState>(
+  //       robot_state); // can not initialize RobotState with RobotState when
+  //                     // RobotState is an abstraction class
+  // }//TODO: how to implement that? clone pattern
 
 private:
   RobotStatus status_;
