@@ -58,7 +58,9 @@ enum class BatteryStatus : uint8_t {
 
 class Battery {
 public:
-  BatteryStatus getBatteryStatus() { return battery_status_; }
+  BatteryStatus getBatteryStatus() const {
+    return battery_status_;
+  } // to let const Battery use it
 
 private:
   double percetage_;

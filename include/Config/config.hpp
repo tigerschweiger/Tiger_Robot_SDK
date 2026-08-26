@@ -24,6 +24,8 @@ public:
   }
 
   static void Load(const std::string &message);
-  //TODO
-  static template typename Get<typename>(std::string &message);
+  // TODO
+  template <typename T>
+  static T
+  Get(const std::string &message); // if using rvalue, const is necessary
 };
