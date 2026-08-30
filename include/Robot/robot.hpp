@@ -1,5 +1,7 @@
 
+#include <cstdint>
 #include <functional>
+#include <iostream>
 #include <localization.hpp>
 #include <memory>
 #include <mission.hpp>
@@ -51,10 +53,12 @@ public:
 
 enum class BatteryStatus : uint8_t {
   Unknown = 0,
-  Charing = 1,
+  Charging = 1,
   Discharging = 2,
   Idle = 3
 };
+
+std::ostream &operator<<(std::ostream &os, BatteryStatus status);
 
 class Battery {
 public:

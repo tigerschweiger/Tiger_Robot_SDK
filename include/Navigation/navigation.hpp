@@ -22,6 +22,9 @@ class Navigation : public INavigator {
 
 // navigation works for batttery check, which should not be, but for satety
 class SafetyNavigationProxy : public INavigator {
+  void plan() override {
+    std::cout << "Using SafetyNavigationProxy!" << std::endl;
+  }
   void navigate() override {
     std::cout << "Checking battery:" << std::endl;
     // if()...
