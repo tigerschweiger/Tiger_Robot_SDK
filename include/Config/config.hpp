@@ -27,5 +27,8 @@ public:
   // TODO
   template <typename T>
   static T
-  Get(const std::string &message); // if using rvalue, const is necessary
+  Get(const std::string &message) { // if using rvalue, const is necessary
+    T tmp;
+    return tmp;
+  }
 };
