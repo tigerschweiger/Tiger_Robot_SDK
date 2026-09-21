@@ -9,3 +9,7 @@ std::unique_ptr<Sensor> createSensor(SensorType type) {
     return std::make_unique<CameraAdapter>();
   }
 }
+
+double LidarSensor::getLidarDistance() {}
+
+double CameraSensor::getCameraDistance() {}

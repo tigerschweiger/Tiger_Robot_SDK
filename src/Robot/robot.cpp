@@ -1,6 +1,16 @@
 #include <robot.hpp>
 
+RobotState::~RobotState() {} // non-implementable?
+
+StandbyState::~StandbyState() {}
+
+void RobotState::normal_charge() {}
+
+void RobotState::non_key_function() {}
+
 void Robot::navigate() { navigator_->navigate(); }
+
+void StandbyState::getState() {}
 
 void Robot::startRobot() {
   locator_->getCurrentLocalization();

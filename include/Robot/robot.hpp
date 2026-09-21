@@ -26,10 +26,17 @@ public:
   virtual void getState() = 0;
   // virtual void charge() = 0;//virtual =0, pure virtual function, if not
   // overrided in the child class, child class will be an abstraction class
-  virtual void normal_charge();
+  virtual void
+  normal_charge(); // key function, first non-pure vitual, non inline fucntion,
+                   // which muss have the implement, or will undefined reference
+                   // to `vtable
 
-  virtual ~RobotState() {} // if it will be inherited, better virtual
-                           // deconstructor to deconstruct the child class
+  virtual void non_key_function(); // must have an implement as long as it is a
+                                   // non-pure vitual, non inline fucntion, same
+                                   // as the ~RobotState() below
+
+  virtual ~RobotState(); // if it will be inherited, better virtual
+                         // deconstructor to deconstruct the child class
 };
 
 class StandbyState
